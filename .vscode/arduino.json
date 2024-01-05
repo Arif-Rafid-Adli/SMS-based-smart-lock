@@ -1,0 +1,4 @@
+{
+    "sketch": "Smart Lock.ino",
+    "board": "arduino:avr:uno"
+}
