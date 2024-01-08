@@ -80,7 +80,7 @@ void loop()
   Serial.println(strID);
 
   //===================================UID Card yang dipermit==================================//
-  if (strID == "UID_Kartu ") // RFID Master Card
+  if (strID.indexOf("B7:31:60:99") >= 0) // RFID Master Card
   {
     delay(2000);
     accessGranted = true;
@@ -124,20 +124,6 @@ void loop()
     Serial.println("Pintu dibuka menggunakan SMS Gateway");
     return;
   }
-  else if (message == "Turn off alarm\r")
-  {
-    noTone(BUZZER);
-    kirim("Alarm telah dimatikan");
-    Serial.println("Alarm dimatikan");
-    // return;
-  }
-  else if (message == "Turn on alarm\r")
-  {
-    alarm();
-    kirim("Alarm diaktifkan");
-    Serial.println("Alarm diaktifkan");
-    return;
-  }
   else
   {
     kirim("Pesan tidak dikenali");
@@ -173,12 +159,11 @@ void alarm()
     delay(1000);
   }
 }
-
 void kirim(String p)
 {
   sim.print("AT+CMGF=1\r\n");
   delay(500);
-  sim.print("AT+CMGS=\"Nomor_HP_Tujuan\"\r");
+  sim.print("AT+CMGS=\"+6287795010939\"\r");
   // sim.print("08127670651");
   // sim.print("\"r\n");
   delay(1000);

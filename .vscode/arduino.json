@@ -1,4 +1,5 @@
 {
-    "sketch": "Smart Lock.ino",
-    "board": "arduino:avr:uno"
+    "board": "arduino:avr:uno",
+    "port": "COM4",
+    "sketch": "Smart Lock.ino"
 }
