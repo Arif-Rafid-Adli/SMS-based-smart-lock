@@ -4,13 +4,13 @@
 
 SoftwareSerial sim(2, 3);
 
-const int SS_PIN = 10;
-const int RST_PIN = 9;
-const int SensorGetar = 6;
-const int BUZZER = 5;
 const int RELAY_PIN = 4;
-const int LED_RED_PIN = 8;
+const int BUZZER = 5;
+const int SensorGetar = 6;
 const int LED_GREEN_PIN = 7;
+const int LED_RED_PIN = 8;
+const int RST_PIN = 9;
+const int SS_PIN = 10;
 
 String message;
 
