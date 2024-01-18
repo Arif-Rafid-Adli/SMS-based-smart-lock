@@ -64,11 +64,11 @@ void loop()
   MFRC522::PICC_Type piccType = rfid.PICC_GetType(rfid.uid.sak);
   Serial.println(rfid.PICC_GetTypeName(piccType));
   // Check is the PICC of Classic MIFARE typez
-  if (piccType != MFRC522::PICC_TYPE_MIFARE_MINI && piccType != MFRC522::PICC_TYPE_MIFARE_1K && piccType != MFRC522::PICC_TYPE_MIFARE_4K)
-  {
-    Serial.println(F("Your tag is not of type MIFARE Classic."));
-    return;
-  }
+  // if (piccType != MFRC522::PICC_TYPE_MIFARE_MINI && piccType != MFRC522::PICC_TYPE_MIFARE_1K && piccType != MFRC522::PICC_TYPE_MIFARE_4K)
+  // {
+  //   Serial.println(F("Your tag is not of type MIFARE Classic."));
+  //   return;
+  // }
   String strID = "";
   for (byte i = 0; i < 4; i++)
   {
@@ -91,20 +91,29 @@ void loop()
     // Serial.println(kartu2);
     return;
   }
+  else if (strID.indexOf("43:49:B3:1B") >= 0) // RFID Master Card
+  {
+    delay(2000);
+    accessGranted = true;
+    Serial.println("Pintu diakses menggunakan Master Card");
+    unlock();
+    kirim("Pintu diakses menggunakan kartu RFID");
+    // Serial.print("dengan ");
+    // Serial.println(kartu2);
+    return;
+  }
   else
   {
     // Kartu tidak diotorisasi
     delay(2000);
     accessGranted = false;
     Serial.println("Access denied");
-    digitalWrite(LED_RED_PIN, HIGH);
-    delay(5000);
-    digitalWrite(LED_RED_PIN, LOW);
+    accessDenied();
     return;
   }
 
   //============================Function Untuk Membaca Pesan Masuk===========================//
-  if (Serial.available() > 0)
+/*  if (Serial.available() > 0)
   {
     sim.write(Serial.read());
   }
@@ -128,7 +137,7 @@ void loop()
   {
     kirim("Pesan tidak dikenali");
     return;
-  }
+  }*/
 }
 
 void unlock()
@@ -171,4 +180,13 @@ void kirim(String p)
   sim.write(0x1A);
   delay(1000);
   sim.print("AT+CMGD=3");
+}
+
+void accessDenied()
+{
+  digitalWrite(BUZZER, HIGH);
+  digitalWrite(LED_RED_PIN, HIGH);
+  delay(1000);
+  digitalWrite(BUZZER, LOW);
+  digitalWrite(LED_RED_PIN, LOW);
 }

@@ -1,5 +1,5 @@
 {
     "board": "arduino:avr:uno",
-    "port": "COM4",
-    "sketch": "Smart Lock.ino"
+    "port": "COM3",
+    "sketch": "SmartLock\\SmartLock.ino"
 }
