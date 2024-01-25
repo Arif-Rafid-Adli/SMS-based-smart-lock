@@ -47,12 +47,24 @@ void setup()
 
 void loop()
 {
+  //============================Function Untuk Membaca Pesan Masuk===========================//
+  if (Serial.available() > 0)
+  {
+    sim.write(Serial.read());
+  }
+  if (sim.available() > 0)
+  {
+    message = sim.readStringUntil('\n');
+    Serial.println(message);
+  }
+
   //=========================================Sensor Getar========================================//
   int statusSensorGetar = digitalRead(SensorGetar);
   if (statusSensorGetar == HIGH) // Apabila Sensor Getar mendeteksi adanya getaran
   {
     isVibrationDetected = true;
     Serial.println("Getaran Terdeteksi");
+    kirim ("Getaran terdeteksi");
     alarm();
     return;
   }
@@ -73,7 +85,7 @@ void loop()
   for (byte i = 0; i < 4; i++)
   {
     strID +=
-        (rfid.uid.uidByte[i] < 0x10 ? "0" : "") + String(rfid.uid.uidByte[i], HEX) + (i != 3 ? ":" : "");
+      (rfid.uid.uidByte[i] < 0x10 ? "0" : "") + String(rfid.uid.uidByte[i], HEX) + (i != 3 ? ":" : "");
   }
   strID.toUpperCase();
   Serial.print("Tap card key: ");
@@ -91,8 +103,8 @@ void loop()
     // Serial.println(kartu2);
     return;
   }
-  else if (strID.indexOf("43:49:B3:1B") >= 0) // RFID Master Card
-  {
+  /*else if (strID.indexOf("43:49:B3:1B") >= 0) // RFID Master Card
+    {
     delay(2000);
     accessGranted = true;
     Serial.println("Pintu diakses menggunakan Master Card");
@@ -101,43 +113,34 @@ void loop()
     // Serial.print("dengan ");
     // Serial.println(kartu2);
     return;
-  }
+    }*/
   else
   {
     // Kartu tidak diotorisasi
     delay(2000);
     accessGranted = false;
     Serial.println("Access denied");
+    kirim ("Kartu tidak dikenal terdeteksi");
     accessDenied();
     return;
   }
 
-  //============================Function Untuk Membaca Pesan Masuk===========================//
-/*  if (Serial.available() > 0)
-  {
-    sim.write(Serial.read());
-  }
-  if (sim.available() > 0)
-  {
-    message = sim.readStringUntil('\n');
-    Serial.println(message);
-  }
-
-  //======================Pesan yang Diotoritaskan Untuk Mendapatkan Akses=====================//
-  if (message == "Unlock\r")
-  {
-    delay(2000);
-    accessGranted = true;
-    unlock();
-    kirim("Pintu dibuka menggunakan SMS Gateway");
-    Serial.println("Pintu dibuka menggunakan SMS Gateway");
-    return;
-  }
-  else
-  {
-    kirim("Pesan tidak dikenali");
-    return;
-  }*/
+  /*
+    //======================Pesan yang Diotoritaskan Untuk Mendapatkan Akses=====================//
+    if (message == "Unlock\r")
+    {
+      delay(2000);
+      accessGranted = true;
+      unlock();
+      kirim("Pintu dibuka menggunakan SMS Gateway");
+      Serial.println("Pintu dibuka menggunakan SMS Gateway");
+      return;
+    }
+    else
+    {
+      kirim("Pesan tidak dikenali");
+      return;
+    }*/
 }
 
 void unlock()
@@ -172,7 +175,8 @@ void kirim(String p)
 {
   sim.print("AT+CMGF=1\r\n");
   delay(500);
-  sim.print("AT+CMGS=\"+6287795010939\"\r");
+  // sim.print("AT+CMGS=\"+6287795010939\"\r");
+  sim.print("AT+CMGS=\"+628127670651\"\r");
   // sim.print("08127670651");
   // sim.print("\"r\n");
   delay(1000);
